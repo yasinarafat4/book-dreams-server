@@ -23,10 +23,17 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const collegeCollection = client.db("BDreamsDB").collection("college");
+    const reviewsCollection = client.db("BDreamsDB").collection("reviews");
 
     // Getting college data
     app.get("/college", async (req, res) => {
       const result = await collegeCollection.find().toArray();
+      res.send(result);
+    });
+
+    // Getting reviews data
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewsCollection.find().toArray();
       res.send(result);
     });
 
