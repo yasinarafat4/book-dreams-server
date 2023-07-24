@@ -31,6 +31,26 @@ async function run() {
       res.send(result);
     });
 
+
+
+    // Indexing for search field
+    const indexKey = { name: 1 };
+    const indexOption = { name: "searchByName" };
+
+    const result = await collegeCollection.createIndex(indexKey, indexOption);
+
+    app.get("/searchCollege/:text", async (req, res) => {
+      const searchText = req.params.text;
+
+      const result = await collegeCollection
+        .find({
+          $or: [{ name: { $regex: searchText, $options: "i" } }],
+        })
+        .toArray();
+
+      res.send(result);
+    });
+
      // Getting single college data
      app.get("/college/:id", async (req, res) => {
       const id = req.params.id;
