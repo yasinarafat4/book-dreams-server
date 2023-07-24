@@ -24,14 +24,26 @@ async function run() {
   try {
     const collegeCollection = client.db("BDreamsDB").collection("college");
     const reviewsCollection = client.db("BDreamsDB").collection("reviews");
+    const studentCollection = client.db("BDreamsDB").collection("student");
+
+    // Posting form data
+    app.post("/student", async (req, res) => {
+      const body = req.body;
+      const result = await studentCollection.insertOne(body);
+      res.send(result);
+    });
+
+    // Getting form data
+    app.get("/student", async (req, res) => {
+      const result = await studentCollection.find({}).toArray();
+      res.send(result);
+    });
 
     // Getting college data
     app.get("/college", async (req, res) => {
       const result = await collegeCollection.find().toArray();
       res.send(result);
     });
-
-
 
     // Indexing for search field
     const indexKey = { name: 1 };
@@ -51,14 +63,13 @@ async function run() {
       res.send(result);
     });
 
-     // Getting single college data
-     app.get("/college/:id", async (req, res) => {
+    // Getting single college data
+    app.get("/college/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await collegeCollection.findOne(query);
       res.send(result);
     });
-
 
     // Getting reviews data
     app.get("/reviews", async (req, res) => {
